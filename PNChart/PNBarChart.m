@@ -9,7 +9,7 @@
 #import "PNBarChart.h"
 #import "PNColor.h"
 #import "PNChartLabel.h"
-
+#import "Constant.h"
 
 @interface PNBarChart () {
     NSMutableArray *_xChartLabels;
@@ -45,22 +45,22 @@
 
 - (void)setupDefaultValues
 {
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor clearColor];
     self.clipsToBounds   = YES;
     _showLabel           = YES;
-    _barBackgroundColor  = PNLightGrey;
-    _labelTextColor      = [UIColor grayColor];
+    _barBackgroundColor  = [UIColor clearColor];
+    _labelTextColor      = [UIColor whiteColor];
     _labelFont           = [UIFont systemFontOfSize:11.0f];
     _xChartLabels        = [NSMutableArray array];
     _yChartLabels        = [NSMutableArray array];
     _bars                = [NSMutableArray array];
     _xLabelSkip          = 1;
-    _yLabelSum           = 4;
+    _yLabelSum           = 2;
     _labelMarginTop      = 0;
     _chartMargin         = 15.0;
     _barRadius           = 2.0;
     _showChartBorder     = NO;
-    _yChartLabelWidth    = 18;
+    _yChartLabelWidth    = 25;
     _rotateForXAxisText  = false;
 }
 
@@ -80,29 +80,31 @@
         _yLabels = [NSMutableArray new];
     }
     
-    if (_showLabel) {
-        //Add y labels
-        
-        float yLabelSectionHeight = (self.frame.size.height - _chartMargin * 2 - xLabelHeight) / _yLabelSum;
-        
-        for (int index = 0; index < _yLabelSum; index++) {
-            
-            NSString *labelText = _yLabelFormatter((float)_yValueMax * ( (_yLabelSum - index) / (float)_yLabelSum ));
-            
-            PNChartLabel * label = [[PNChartLabel alloc] initWithFrame:CGRectMake(0,
-                                                                                  yLabelSectionHeight * index + _chartMargin - yLabelHeight/2.0,
-                                                                                  _yChartLabelWidth,
-                                                                                  yLabelHeight)];
-            label.font = _labelFont;
-            label.textColor = _labelTextColor;
-            [label setTextAlignment:NSTextAlignmentRight];
-            label.text = labelText;
-            
-            [_yChartLabels addObject:label];
-            [self addSubview:label];
-            
-        }
-    }
+    /// Delete y label by wonzigii on 3/1/2015.
+//    if (_showLabel) {
+//        //Add y labels
+//        
+//        float yLabelSectionHeight = (self.frame.size.height - _chartMargin * 2 - xLabelHeight) / _yLabelSum;
+//        
+//        for (int index = 0; index < _yLabelSum; index++) {
+//            
+//            NSString *labelText = _yLabelFormatter((float)_yValueMax * ( (_yLabelSum - index) / (float)_yLabelSum ));
+//            
+//            PNChartLabel * label = [[PNChartLabel alloc] initWithFrame:CGRectMake(0,
+//                                                                                  yLabelSectionHeight * index + _chartMargin - yLabelHeight/2.0,
+//                                                                                  _yChartLabelWidth,
+//                                                                                  yLabelHeight)];
+//            
+//            label.font = _labelFont;
+//            label.textColor = _labelTextColor;
+//            [label setTextAlignment:NSTextAlignmentRight];
+//            label.text = labelText;
+//            NSLog(@"%@",label);
+//            [_yChartLabels addObject:label];
+//            [self addSubview:label];
+//            
+//        }
+//    }
 }
 
 -(void)updateChartData:(NSArray *)data{
@@ -176,7 +178,8 @@
     //Add bars
     CGFloat chartCavanHeight = self.frame.size.height - _chartMargin * 2 - xLabelHeight;
     NSInteger index = 0;
-    
+    int i = 0;
+    //NSLog(@"%@",_yLabels);
     for (NSNumber *valueString in _yValues) {
         
         PNBar *bar;
@@ -210,6 +213,23 @@
             //Change Bar Radius
             bar.barRadius = _barRadius;
             
+            ///Fix by Wongzigii to change each bar's colors on 3/1/2015
+            switch (i) {
+                case 0:
+                    bar.barColorGradientStart = WZRedBeginColor;
+                    break;
+                case 1:
+                    bar.barColorGradientStart = WZGreenBeginColor;
+                    break;
+                case 2:
+                    bar.barColorGradientStart = WZBlueBeginColor;
+                    break;
+                default:
+                    break;
+            }
+            i ++;
+            
+            
             //Change Bar Background color
             bar.backgroundColor = _barBackgroundColor;
             
@@ -220,7 +240,7 @@
                 bar.barColor = [self barColorAtIndex:index];
             }
             // Add gradient
-            bar.barColorGradientStart = _barColorGradientStart;
+            //bar.barColorGradientStart = _barColorGradientStart;
             
             //For Click Index
             bar.tag = index;
@@ -254,6 +274,7 @@
     
     [self updateBar];
     
+
     //Add chart border lines
 
     if (_showChartBorder) {
@@ -314,7 +335,7 @@
         pathLeftAnimation.fromValue = @0.0f;
         pathLeftAnimation.toValue = @1.0f;
         [_chartLeftLine addAnimation:pathLeftAnimation forKey:@"strokeEndAnimation"];
-
+        
         _chartLeftLine.strokeEnd = 1.0;
 
         [self.layer addSublayer:_chartLeftLine];

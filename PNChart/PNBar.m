@@ -38,7 +38,7 @@
 
 - (void)setGrade:(float)grade
 {
-    NSLog(@"New garde %f",grade);
+    //NSLog(@"New garde %f",grade);
 
     UIBezierPath *progressline = [UIBezierPath bezierPath];
 
@@ -102,7 +102,7 @@
             gradientLayer.startPoint = CGPointMake(0.5,1.0);
             gradientLayer.endPoint = CGPointMake(0.5,0.0);
             gradientLayer.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
-            UIColor *endColor = (_barColor ? _barColor : [UIColor greenColor]);
+            UIColor *endColor = (_barColor ? _barColor : _barColorGradientStart);
             NSArray *colors = @[
                                 (id)_barColorGradientStart.CGColor,
                                 (id)endColor.CGColor

@@ -7,18 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PNGenericChart.h"
 #import "PNChartDelegate.h"
 #import "PNBar.h"
 
 #define xLabelMargin 15
 #define yLabelMargin 15
-#define yLabelHeight 11
+#define yLabelHeight 15
 #define xLabelHeight 20
 
 typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 
-@interface PNBarChart : PNGenericChart
+@interface PNBarChart : UIView
 
 /**
  * Draws the chart in an animated fashion.
@@ -32,7 +31,7 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 @property (nonatomic) NSMutableArray * bars;
 
 @property (nonatomic) CGFloat xLabelWidth;
-@property (nonatomic) int yValueMax;
+@property (nonatomic) int     yValueMax;
 @property (nonatomic) UIColor *strokeColor;
 @property (nonatomic) NSArray *strokeColors;
 
